@@ -1,0 +1,8 @@
+.pmd
+.pmd*
+.classpath
+.settings/
+.project
+target/
+pmd-eclipse.log
+*~
