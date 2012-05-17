@@ -7,11 +7,11 @@
     <distributionManagement>
     
         <repository>
-            <id>mep-releases</id>
+            <id>releases</id>
             <url>http://nexus.covertmobile.com/content/repositories/releases/</url>
         </repository>
         <snapshotRepository>
-            <id>mep-snapshots</id>
+            <id>snapshots</id>
             <url>http://nexus.covertmobile.com/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
