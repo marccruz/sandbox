@@ -166,33 +166,32 @@ jQuery.extend({
 }); 
 
 $(document).ready(function() {
-	$('.async.file-input').change(function(e) {
-		$ct = $(this).closest('.creative');
-		$.ajaxFileUpload({
-			url: $(this).data('url'),
-			secureuri:false,
-			fileElementId: $(this).attr('id'),
-			dataType: 'xml',
-			beforeSend:function() {},
-			complete:function() {},				
-			success: function (data, status) {
-				var tid = $ct.attr('id');
-				var $el = $(data).find('#' + tid);
-				if ($el) {
-					$ct.replaceWith($el[0].outerHTML);
-				} else {
-					var errorMsg = $(data).find('dijitTitlePaneContentInner').innerText;
-					alert(errorMsg);
-				}
-			},
-			error: function (status, e) {
-				alert(e);
-			}
-		});
-	});
-	
-	$('.button.file-upload').click(function(e) {
+	$('.creative .file-browse.button').on('click', function(e) {
 		var $fileInput = $(this).siblings('input[type="file"]');
+		$fileInput.on('change', function(e) {
+			$ct = $(this).closest('.upload-container').siblings('.image-outer-container');
+			$.ajaxFileUpload({
+				url: $(this).data('url'),
+				secureuri:false,
+				fileElementId: $(this).attr('id'),
+				dataType: 'xml',
+				beforeSend:function() {},
+				complete:function() {},				
+				success: function (data, status) {
+					var tid = $ct.attr('id');
+					var $el = $(data).find('#' + tid);
+					if ($el) {
+						$ct.replaceWith($el[0].outerHTML);
+					} else {
+						var errorMsg = $(data).find('dijitTitlePaneContentInner').innerText;
+						alert(errorMsg);
+					}
+				},
+				error: function (status, e) {
+					alert(e);
+				}
+			});
+		});
 		$fileInput.click();
 	});
 });
