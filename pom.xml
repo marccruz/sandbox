@@ -5,14 +5,19 @@
     <packaging>jar</packaging>
     <version>1.7.2-SNAPSHOT</version>
     <distributionManagement>
-    
         <repository>
+            <uniqueVersion>false</uniqueVersion>
             <id>releases</id>
-            <url>http://nexus.covertmobile.com/content/repositories/releases/</url>
+            <name>Releases</name>
+            <url>http://nexus.covertmobile.com/content/repositories/releases</url>
+            <layout>default</layout>
         </repository>
         <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
             <id>snapshots</id>
-            <url>http://nexus.covertmobile.com/content/repositories/snapshots/</url>
+            <name>Snapshots</name>
+            <url>http://nexus.covertmobile.com/content/repositories/snapshots</url>
+            <layout>default</layout>
         </snapshotRepository>
     </distributionManagement>
 </project>
