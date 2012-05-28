@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('.file-input.async').on('change', function(e) {
-		$ctx = $(this).closest('.upload-container').siblings('.image-outer-container');
+		$ctx = $(this).closest('.creative').find('.image-inner-container');
 		$file = $(this).siblings('input[type=hidden]');
 		
 		// grab the uploaded files to post to the server
@@ -22,7 +22,7 @@ $(document).ready(function() {
         		if (data.success && data.image) {
         			// update properties that changed.  
         			// i.e. src, mimeType and name attributes.
-        			$(this).find('img')
+        			$(this).children('img')
         				.attr('name', data.image.name)
         					.attr('src', data.image.src)
         		} else {
@@ -31,7 +31,7 @@ $(document).ready(function() {
         		}
         	},
         	type: 'POST',
-        	url: '/upload'
+        	url: $(this).data('url')
         });
 	});
 
