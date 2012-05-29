@@ -22,7 +22,7 @@ $(document).ready(function() {
         		if (data.success && data.image) {
         			// update properties that changed.  
         			// i.e. src, mimeType and name attributes.
-        			$(this).children('img')
+        			$(this).find('img')
         				.attr('name', data.image.name)
         					.attr('src', data.image.src)
         		} else {
