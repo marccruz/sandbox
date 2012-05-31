@@ -40,5 +40,15 @@ $(document).ready(function() {
 		var $fileInput = $(this).siblings('input[type="file"]');
 		$fileInput.click();
 	});
+	
+	$('.creative .delete.button').on('click', function(e) {
+		$ctx = $(this).closest('.creative').find('.image-inner-container');
+		var type = $ctx.find('input[name=type]').val();
+		var sel = 'input[name=' + type.toLowerCase() + 'Deleted]';
+		$ctx.find(sel).val('true')
+		$ctx.find('img')
+			.attr('name', '')
+				.attr('src', '/creatives?binaryAssetId=&size='+type);
+	});
 });
 
