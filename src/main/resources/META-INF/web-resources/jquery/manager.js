@@ -22,7 +22,7 @@ $(document).ready(function() {
         		if (data.success && data.image) {
         			// update properties that changed.  
         			// i.e. src, mimeType and name attributes.
-        			$(this).children('img')
+        			$(this).find('img')
         				.attr('name', data.image.name)
         					.attr('src', data.image.src)
         		} else {
@@ -39,6 +39,16 @@ $(document).ready(function() {
 	$('.creative .file-browse.button').on('click', function(e) {
 		var $fileInput = $(this).siblings('input[type="file"]');
 		$fileInput.click();
+	});
+	
+	$('.creative .delete.button').on('click', function(e) {
+		$ctx = $(this).closest('.creative').find('.image-inner-container');
+		var type = $ctx.find('input[name=type]').val();
+		var sel = 'input[name=' + type.toLowerCase() + 'Deleted]';
+		$ctx.find(sel).val('true')
+		$ctx.find('img')
+			.attr('name', '')
+				.attr('src', '/creatives?binaryAssetId=&size='+type);
 	});
 });
 
