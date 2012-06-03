@@ -20,8 +20,8 @@
             <layout>default</layout>
         </snapshotRepository>
         <site>
-            <id>snapshots</id>
-            <url>http://nexus.covertmobile.com/content/repositories</url>
+            <id>snapshots1</id>
+            <url>http://nexus.covertmobile.com/content/repositories/snapshots</url>
         </site>
     </distributionManagement>
 </project>
