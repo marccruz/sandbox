@@ -6,14 +6,18 @@
     <version>1.7.2-SNAPSHOT</version>
     <distributionManagement>
         <repository>
-            <id>ps103148.dreamhostps.com</id>
-            <name>ps103148.dreamhostps.com-releases</name>
-            <url>http://nexus.covertmobile.com:8081/artifactory/releases</url>
+            <uniqueVersion>false</uniqueVersion>
+            <id>releases</id>
+            <name>Releases</name>
+            <url>http://nexus.covertmobile.com/content/repositories/releases</url>
+            <layout>default</layout>
         </repository>
         <snapshotRepository>
-            <id>ps103148.dreamhostps.com</id>
-            <name>ps103148.dreamhostps.com-snapshots</name>
-            <url>http://nexus.covertmobile.com:8081/artifactory/snapshots</url>
+            <uniqueVersion>true</uniqueVersion>
+            <id>snapshots</id>
+            <name>Snapshots</name>
+            <url>http://nexus.covertmobile.com/content/repositories/snapshots</url>
+            <layout>default</layout>
         </snapshotRepository>
     </distributionManagement>
 </project>
