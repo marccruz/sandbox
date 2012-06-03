@@ -19,9 +19,5 @@
             <url>http://nexus.covertmobile.com/content/repositories/snapshots</url>
             <layout>default</layout>
         </snapshotRepository>
-        <site>
-            <id>snapshots1</id>
-            <url>http://nexus.covertmobile.com/content/repositories</url>
-        </site>
     </distributionManagement>
 </project>
