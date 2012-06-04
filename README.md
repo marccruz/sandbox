@@ -1,4 +1,4 @@
 jquery
 ======
 
-jQuery based components
+jQuery based components.
