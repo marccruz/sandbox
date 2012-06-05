@@ -1,13 +1,14 @@
 $(document).ready(function() {
 	
 	// Handler to upload a creative image
-	$('.file-input.async').on('change', function(e) {
+	$('.upload-button-container').on('change', 'input[type=file]', function(e) {
 		var $p = $(this).closest('.dijitTitlePaneContentOuter');
-		var $overlay = $('#TB_overlay');
-		var $loading = $("<div id='TB_load'><img src='"+imgLoader.src+"' /></div>");
+		var $overlay, $loading=$("<div id='TB_load'><img src='"+imgLoader.src+"' /></div>");
+		if($overlay = document.getElementById("TB_overlay") === null){
+			$overlay = $('<div id="TB_overlay" class="TB_overlayBG"></div>'); 
+			$("body").append($overlay);
+		}
 		$("body").append($loading);
-		
-		$overlay.show();
 		$loading.show();
 
 		var $ctx = $(this).closest('.creative').find('.image-inner-container');
@@ -22,7 +23,7 @@ $(document).ready(function() {
 			cache: false,
 			complete: function(jqXHR, textStatus) {
 				$loading.remove();
-				$overlay.hide();
+				$overlay.trigger('unload').unbind().remove();
 			},
         	contentType: false,
         	context: $ctx,
@@ -63,10 +64,20 @@ $(document).ready(function() {
 		var $ctx = $creative.find('.image-inner-container');
 		var type = $creative.find('input[name=type]').val();
 		var sel = 'input[name=' + type.toLowerCase() + 'Deleted]';
-		$ctx.find(sel).val('true')
+		$creative.find(sel).val('true')
 		$ctx.find('img')
 			.attr('name', '')
 				.attr('src', '/creatives?binaryAssetId=&size='+type);
+		var $curInput = $(this).siblings('.upload-button-container').children('input[type=file]');
+		$newInput = $('<input type="file"/>');
+		$newInput
+			.attr('id', $curInput.attr('id'))
+				.attr('name', $curInput.attr('name'))
+					.attr('class', $curInput.attr('class'))
+						.attr('accept', $curInput.attr('accept'))
+							.attr('style', $curInput.attr('style'))
+								.attr('data-url',$curInput.attr('data-url'));
+		$curInput.replaceWith($newInput);
 	});
 });
 
