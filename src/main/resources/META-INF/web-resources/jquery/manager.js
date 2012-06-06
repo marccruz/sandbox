@@ -81,3 +81,7 @@ $(document).ready(function() {
 	});
 });
 
+dojo.addOnLoad(function() {
+	$('.dijitTitlePaneContentInner').removeAttr('tabindex');
+});
+
