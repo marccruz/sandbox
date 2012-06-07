@@ -12,7 +12,17 @@ $(document).ready(function() {
 		$loading.show();
 
 		var $ctx = $(this).closest('.creative').find('.image-inner-container');
-		var $file = $(this).siblings('input[type=hidden]');
+		var file = $(this)[0].files[0];
+
+		dojo.require('dojo.string');
+		if (!file || !dojo.string.contains('image',file.type,false)) {
+			var $creative = $(this).closest('.creative');
+			$creative.find('.delete.button').click();
+			alert("The format of the image is not supported. Supported formats are: GIFs, JPEGs and PNGs.");
+			$loading.remove();
+			$overlay.trigger('unload').unbind().remove();
+			return;
+		}
 		
 		// grab the uploaded files to post to the server
 		var data = new FormData();
