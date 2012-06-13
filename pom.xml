@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.seranomobile</groupId>
+    <groupId>com.serranomobile</groupId>
     <artifactId>jquery</artifactId>
     <packaging>jar</packaging>
     <version>1.7.2-SNAPSHOT</version>
@@ -9,14 +9,14 @@
             <uniqueVersion>false</uniqueVersion>
             <id>releases</id>
             <name>Releases</name>
-            <url>http://nexus.covertmobile.com/content/repositories/releases</url>
+            <url>http://nexus.serranomobile.com/content/repositories/releases</url>
             <layout>default</layout>
         </repository>
         <snapshotRepository>
             <uniqueVersion>true</uniqueVersion>
             <id>snapshots</id>
             <name>Snapshots</name>
-            <url>http://nexus.covertmobile.com/content/repositories/snapshots</url>
+            <url>http://nexus.serranomobile.com/content/repositories/snapshots</url>
             <layout>default</layout>
         </snapshotRepository>
     </distributionManagement>
