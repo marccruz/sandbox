@@ -45,11 +45,10 @@ $(document).ready(function() {
         	processData:false,
         	success:function(data, textStatus, jqXHR) {
         		if (data.success && data.image) {
-        			// update properties that changed.  
-        			// i.e. src, mimeType and name attributes.
-        			$(this).find('img')
-        				.attr('name', data.image.name)
-        					.attr('src', data.image.src)
+        			// add new image with returned properties
+        			$(this).children('img').remove();
+        			var $newImg = $('<img />').attr('name', data.image.name).attr('src', data.image.src);
+        			$newImg.insertBefore($(this).children('span'));
         		} else {
         			alert("The server responded with an error.")
         			// TODO: Error Handling
@@ -72,14 +71,10 @@ $(document).ready(function() {
 		e.preventDefault();
 		var $creative = $(this).closest('.creative');
 		var $ctx = $creative.find('.image-inner-container');
-		var type = $creative.find('input[name=type]').val();
-		var sel = 'input[name=' + type.toLowerCase() + 'Deleted]';
-		$creative.find(sel).val('true')
-		$ctx.find('img')
-			.attr('name', '')
-				.attr('src', '/creatives?binaryAssetId=&size='+type);
+		$creative.children('input[type=hidden]').val('');
+		$ctx.children('img').remove();
 		var $curInput = $(this).siblings('.upload-button-container').children('input[type=file]');
-		$newInput = $('<input type="file"/>');
+		var $newInput = $('<input type="file"/>');
 		$newInput
 			.attr('id', $curInput.attr('id'))
 				.attr('name', $curInput.attr('name'))
