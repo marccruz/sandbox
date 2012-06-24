@@ -1,3 +1,13 @@
+function pleaseWait() {
+	var $overlay, $loading=$("<div id='TB_load'><img src='"+imgLoader.src+"' /></div>");
+	if($overlay = document.getElementById("TB_overlay") === null){
+		$overlay = $('<div id="TB_overlay" class="TB_overlayBG"></div>'); 
+		$("body").append($overlay);
+	}
+	$("body").append($loading);
+	$loading.show();
+}
+
 $(document).ready(function() {
 	
 	// Handler to upload a creative image
@@ -88,5 +98,11 @@ $(document).ready(function() {
 
 dojo.addOnLoad(function() {
 	$('.dijitTitlePaneContentInner').removeAttr('tabindex');
+	var attrs = dojo.attr(dojo.doc.body, 'class');
+	dojo.attr(dojo.doc.body, 'class', attrs + ' ready');
+	
+	$('.mep_globalNav > .tab-item').on('click', function(){
+		pleaseWait();
+	});
 });
 
