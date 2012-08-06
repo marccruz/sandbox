@@ -1,0 +1,89 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" 
+    xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+    xmlns:debug="urn:jsptagdir:/WEB-INF/tags/debug" xmlns:json="http://www.atg.com/taglibs/json" 
+    xmlns:spring="http://www.springframework.org/tags" version="2.0">
+
+    <jsp:output omit-xml-declaration="yes" />
+    <jsp:directive.attribute name="id" type="java.lang.String" required="false" rtexprvalue="true" description="The column's id."/>
+    <jsp:directive.attribute name="field" required="false" type="java.lang.String" description="Field name of the property in the bean contained in the data attribute." />
+    <jsp:directive.attribute name="label" required="false" type="java.lang.String" description="Title of the column (th)." />
+    <jsp:directive.attribute name="labelCode" required="false" type="java.lang.String" rtexprvalue="true" description="Key for label message bundle if name is not supplied." />
+    <jsp:directive.attribute name="headerStyle" required="false" type="java.lang.String" description="HTML style attribute which will affect the th cell." />
+    <jsp:directive.attribute name="style" required="false" type="java.lang.String" rtexprvalue="false" description="CSS style of the HTML table." />
+    <jsp:directive.attribute name="headerCssClass" required="false" type="java.lang.String" description="CSS class which will affect the th cell." />
+    <jsp:directive.attribute name="cssClass" required="false" type="java.lang.String" description="CSS class which will affect every td of the column." />
+    <jsp:directive.attribute name="width" required="false" type="java.lang.String" description="Width of the column. (defaults to auto)" />
+    <jsp:directive.attribute name="dataType" required="false" type="java.lang.String" description="The type of the column. Supported types are 'bool', 'integer', 'money', 'string', 'date', 'datetime'. (defaults to string)" />
+    <jsp:directive.attribute name="defaultValue" required="false" type="java.lang.String" description="The column's default value" />
+    <jsp:directive.attribute name="hidden" required="false" type="java.lang.Boolean" description="Specifies whether to hide the column. (defaults to false)"/>
+    <jsp:directive.attribute name="sort" required="false" type="java.lang.Boolean" description="Enable or disable sorting on this column. (defaults to false)"/>
+    <c:if test="${empty label}">
+        <c:if test="${not empty labelCode}">
+            <c:set var="label"><spring:message code="${labelCode}"/></c:set>
+        </c:if>
+    </c:if>
+
+    
+    <c:if test="${columnDefinitions}">
+	   	<json:object>
+	   		<json:property name="sName" value="${field}"/>
+	   		<!--<json:property name="mDataProp" value="${field}"/>-->
+	   		<json:property name="sTitle" value="${label}"/>
+	   		<!--<json:property name="sClass" value="${cssClass}"/>-->
+	   		<json:property name="sWidth" value="${width}"/>
+	   		<json:property name="bVisible" value="${empty hidden? false : hidden}"/>
+	   		<json:property name="bSortable" value="${empty sort? false : sort}"/>
+	   		<!--<json:property name="sDefaultContent" value="${empty defaultValue? '' : defaultValue}"/>-->
+	   		<!--<json:property name="sType" value="${empty dataType? 'string' : dataType}"/>-->
+
+	   	</json:object>
+    </c:if>
+    
+    <c:if test="${fieldNames}">
+    	<json:property value="${field}"/>
+    </c:if>
+    
+    <c:if test="${getContents}">
+    	<c:choose>
+    		<c:when test="${empty properties}">
+    			<c:set var="properties" value="${property eq null ? 'null' : field}" scope="request" />
+    		</c:when>
+    		<c:otherwise>
+    			<c:choose>
+    				<c:when test="${field eq null}">
+    					<c:set var="properties" value="${properties}${delimitor}null" scope="request" />
+    				</c:when>
+    				<c:otherwise>
+    					<c:set var="properties" value="${properties}${delimitor}${field}" scope="request" />
+    				</c:otherwise>
+    			</c:choose>
+    		</c:otherwise>
+    	</c:choose>
+    
+    	<!-- Evaluation du corps du tag column -->
+    	<jsp:doBody var="colContents" scope="page"/>
+    		
+    	<c:choose>
+    		<c:when test="${empty contents}">
+    			<c:choose>
+    				<c:when test="${empty colContents}">
+    					<c:set var="contents" value="null" scope="request" />
+    				</c:when>
+    				<c:otherwise>
+    					<c:set var="contents" value="${colContents}" scope="request" />
+    				</c:otherwise>
+    			</c:choose>
+    		</c:when>
+    		<c:otherwise>
+    			<c:choose>
+    				<c:when test="${empty colContents}">
+    					<c:set var="contents" value="${contents}${delimitor}null" scope="request" />
+    				</c:when>
+    				<c:otherwise>
+    					<c:set var="contents" value="${contents}${delimitor}${colContents}" scope="request" />
+    				</c:otherwise>
+    			</c:choose>
+    		</c:otherwise>
+    	</c:choose>
+    </c:if>
+</jsp:root>

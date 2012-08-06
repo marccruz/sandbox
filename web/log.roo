@@ -1,0 +1,16 @@
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-01 11:33:52
+project --topLevelPackage com.serranomobile.sandbox --projectName web --java 6 --packaging JAR
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-01 11:33:52
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-01 11:34:19
+hint
+mongo setup
+hint
+help web
+web mvc setup
+web mvc controller --class ~.controllers.HomeController
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-01 11:56:36
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-01 12:19:35
+// [failed] entity mongo --class com.serranomobile.sandbox.web.domains.User
+// [failed] entity mongo --class com.serranomobile.sandbox.web.domains.User
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-03 11:32:35
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-05 10:26:08

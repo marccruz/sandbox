@@ -1,0 +1,123 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" 
+    xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" 
+    xmlns:json="http://www.atg.com/taglibs/json" xmlns:debug="urn:jsptagdir:/WEB-INF/tags/debug" version="2.0">
+    <jsp:output omit-xml-declaration="yes" />
+    
+    <jsp:directive.attribute name="id" required="true" type="java.lang.String" rtexprvalue="true" description="DOM id of the HTML table." />
+    <jsp:directive.attribute name="items" required="true" rtexprvalue="true" type="java.util.Collection" description="Collection of data used to populate the table." />
+    <jsp:directive.attribute name="dataObjectId" required="true" type="java.lang.String" rtexprvalue="false" description="Name of the object representing the current row." />
+    <jsp:directive.attribute name="cssClass" required="false" type="java.lang.String" rtexprvalue="false" description="CSS class(es) of the HTML table." />
+    <jsp:directive.attribute name="style" required="false" type="java.lang.String" rtexprvalue="false" description="CSS style of the HTML table." />
+    <jsp:directive.attribute name="showInfo" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Show or hide the pagination info. (defaultsto false)."/>
+    <jsp:directive.attribute name="paginate" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable pagination. (defaults to false)" />
+    <jsp:directive.attribute name="filter" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable filtering. (defaults to false)" />
+    <jsp:directive.attribute name="lengthChangeEditable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Specifies whether to allow users to modify how many items are displayed on the grid." />
+    <jsp:directive.attribute name="showAddNew" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable an add link on the top of the table." />
+    <jsp:directive.attribute name="addButtonUrl" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, used to fill href attribute of a link. Warning This attribute is evaluated with &lt;c:url&gt;" />
+    <jsp:directive.attribute name="addButtonCssClass" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, appended to the CSS attribute of the link." />
+    <jsp:directive.attribute name="addButtonLabelCode" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, key for label message bundle if addButtonlabel is not supplied" />
+  	<jsp:directive.variable name-from-attribute="dataObjectId" alias="dataItem" variable-class="java.lang.Object" scope="NESTED" />
+    
+    <c:set var="colCounter" value="0" scope="request" />
+    <c:set var="delimitor" value="|" scope="request"/>
+    <c:set var="showAddNew" value="${(not empty addButtonUrl and empty showAddNew) or (showAddNew eq true and not showAddNew eq false ) ? true : false}" />
+    <c:set var="addButtonUrl" value="${empty addButtonUrl ? '' : addButtonUrl}" />
+    <c:set var="addButtonLabelCode" value="${empty addButtonLabelCode ? 'global_label_add':addButtonLabelCode }" />
+    <c:if test="${empty addButtonLabel}">
+        <c:if test="${not empty addButtonLabelCode}">
+            <c:set var="addButtonLabel"><spring:message code="${addButtonLabelCode}"/></c:set>
+        </c:if>
+    </c:if>
+    <c:set var="addButtonCssClass" value="${empty addButtonCssClass ? 'btn' : addButtonCssClass}" />
+    <c:set var="cssClass" value="${empty cssClass ? 'table table-striped table-bordered table-condensed' : cssClass}" />
+    <c:set var="style" value="${empty style ? '' : style}" />
+    <c:set var="delimitor" value="|" scope="request"/>
+    <c:set var="columnFields" value="" scope="request"/>
+    
+    
+    <c:set var="columnDefinitions" value="true" scope="request"/>
+    <c:set var="columnDefs">
+    	<json:array><jsp:doBody/></json:array>
+    </c:set>
+    <debug:log message="Columns: ${columnDefs}"/>
+    <c:set var="columnDefinitions" value="false" scope="request"/>
+   
+    <c:set var="fieldNames" value="true" scope="request"/>
+    <c:set var="fieldNames">
+    	<json:array><jsp:doBody/></json:array>
+    </c:set>
+    <debug:log message="Fields: ${fieldNames}"/>
+    <c:set var="fieldNames" value="false" scope="request"/>
+    
+    <table id="${id}" class="${cssClass}" style="${style}table-layout:fixed;" >
+    <thead><th>Column A</th><th>Column B</th><th>Column C</th></thead>
+    <tbody>
+       <c:set var="getContents" value="true" scope="request" />
+       <c:forEach var="dataItem" items="${items}" varStatus="status">
+          <c:set var="properties" value="" scope="request" />
+          <c:set var="contents" value="" scope="request" />
+          <jsp:doBody />
+          <c:set var="listProperty" value="${fn:split(properties, delimitor)}" scope="request" />
+          <tr>
+             <c:forTokens var="body" items="${contents}" delims="${delimitor}" varStatus="s">
+                <c:set var="columnContent" value="${listContent[status.count - 1]}" />
+                <td>
+                    <div class="td-inner" style="overflow:hidden;text-overflow:ellipsis;">
+                       <c:choose>
+                          <c:when test="${listProperty[s.count - 1] eq 'null'}">
+                             <c:out value="${body eq 'null'? '' : body}" escapeXml="false" />
+                          </c:when>
+                          <c:otherwise>
+                             <c:set value="${listProperty[s.count - 1]}" var="property" />
+                             <c:catch var ="catchException">
+                                 <spring:eval expression="dataItem.${property}" var="value"/>
+                                 <c:out value="${value eq 'null'? 'empty property' : value}"/>
+                             </c:catch>
+                          </c:otherwise>
+                       </c:choose>
+                   </div>
+               </td>
+             </c:forTokens>	
+          </tr>
+       </c:forEach>
+       <c:set var="getContents" value="false" scope="request" />
+    </tbody>
+    </table>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+    	var params = {
+    		bInfo: '${showInfo eq true}',
+        	bPaginate: '${paginate eq true}',
+        	sPaginationType: 'full_numbers',
+        	bLengthChange: '${legnthChangeEditable eq true}',
+        	bFilter: '${filter eq true}',
+        	aaSorting: [],
+        	bJQueryUI: true,
+        	bAutoWidth: false,
+        	fnInitComplete: function( oSettings ) { }
+        		/*$('#${htmlTableId}_filter input').addClass('search-query');
+	            $('#${htmlTableId}_length select').addClass('span1');
+	            var $parent = $('#${htmlTableId}_length').parent();
+	            $parent.append($('#${htmlTableId}_addButton_mepButton'));
+	            
+	            <c:if test="${not empty extraFilterIdProperty}">
+	               $('<div style="float: right; margin-right: 10px;"></div>').html($('#${extraFilterIdProperty}')).insertBefore('#${htmlTableId}');
+	            </c:if>
+	            var $tl = $(this).siblings('.mep-header').children('.dataTables_length');
+	            var $p = $(this).siblings('.mep-footer').children('.dataTables_paginate');
+	            $tl.insertBefore($p);
+	            */
+	        
+	        <c:if test="${labelsProperty}">
+	        ,oLanguage: { 
+	            sUrl: '<c:url value="${labelsProperty}" />'
+	        }</c:if>
+	        ,aoColumns: <c:out value="${columnDefs}" escapeXml="false" />
+	     };
+   		var dataTable = $('#${id}').dataTable(params);
+    });
+   
+    </script>
+</jsp:root>
