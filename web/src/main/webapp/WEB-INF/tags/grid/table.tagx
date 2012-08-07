@@ -4,7 +4,7 @@
     xmlns:json="http://www.atg.com/taglibs/json" xmlns:debug="urn:jsptagdir:/WEB-INF/tags/debug" version="2.0">
     <jsp:output omit-xml-declaration="yes" />
     
-    <jsp:directive.attribute name="id" required="true" type="java.lang.String" rtexprvalue="true" description="DOM id of the HTML table." />
+    <jsp:directive.attribute name="htmlTableId" required="true" type="java.lang.String" rtexprvalue="true" description="DOM id of the HTML table." />
     <jsp:directive.attribute name="items" required="true" rtexprvalue="true" type="java.util.Collection" description="Collection of data used to populate the table." />
     <jsp:directive.attribute name="dataObjectId" required="true" type="java.lang.String" rtexprvalue="false" description="Name of the object representing the current row." />
     <jsp:directive.attribute name="cssClass" required="false" type="java.lang.String" rtexprvalue="false" description="CSS class(es) of the HTML table." />
@@ -15,21 +15,23 @@
     <jsp:directive.attribute name="sortable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable sorting of columns. Sorting of individual columns can be disabled by the  'sortable' option for each column." />
     <jsp:directive.attribute name="searchable" required="false" type="java.lang.Boolean" description="Enables or disables search feature. (default to false)"/>
     <jsp:directive.attribute name="lengthChangeEditable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Specifies whether to allow users to modify how many items are displayed on the grid." />
-    <jsp:directive.attribute name="canAddNew" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable an add link on the top of the table." />
-    <jsp:directive.attribute name="addButtonUrl" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, used to fill href attribute of a link. Warning This attribute is evaluated with &lt;c:url&gt;" />
+    <jsp:directive.attribute name="canAdd" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable an add link on the top of the table." />
+    <jsp:directive.attribute name="deferAdd" required="false" rtexprvalue="true" type="java.lang.Boolean" description="If true, new items added to the collection are posted to the server immediately and asyncronously. If false the new item gets added to its parent's form fields and sent to the server on the next submit of its parent form. (defaults to false)" />
+    <jsp:directive.attribute name="addButtonUrl" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, used to fill href attribute of the add button. Warning This attribute is evaluated with &lt;c:url&gt;" />
     <jsp:directive.attribute name="addButtonCssClass" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, appended to the CSS attribute of the link." />
     <jsp:directive.attribute name="addButtonLabelCode" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, key for label message bundle if addButtonlabel is not supplied" />
+  	<jsp:directive.attribute name="addFormUrl" required="false" rtexprvalue="true" type="java.lang.String" description="Specifies the url for the 'create' form of the table's model object." />
   	<jsp:directive.variable name-from-attribute="dataObjectId" alias="dataItem" variable-class="java.lang.Object" scope="NESTED" />
     
-    <c:set var="showPaginationInfo" value="${empty showPaginationInfo? true : showPaginationInfo}"/>
-    <c:set var="paginate" value="${empty paginate? true : paginate}"/>
+    <c:set var="showPaginationInfo" value="${paginate and (not empty showPaginationInfo)? showPaginationInfo : false}"/>
+    <c:set var="paginate" value="${empty paginate? false : paginate}"/>
     <c:set var="sortable" value="${empty sortable? false : sortable}"/>
     <c:set var="filterable" value="${empty filterable? false : filterable}"/>
     <c:set var="lengthChangable" value="${empty lengthChangable? true : lengthChangable}"/>
     
     <c:set var="colCounter" value="0" scope="request" />
     <c:set var="delimitor" value="|" scope="request"/>
-    <c:set var="canAddNew" value="${(not empty addButtonUrl and empty canAddNew) or (canAddNew eq true and not canAddNew eq false ) ? true : false}" />
+    <c:set var="canAdd" value="${(empty canAdd and not empty addButtonUrl) or (canAdd eq true) ? true : false}" />
     <c:set var="addButtonUrl" value="${empty addButtonUrl ? '' : addButtonUrl}" />
     <c:set var="addButtonLabelCode" value="${empty addButtonLabelCode ? 'global_label_add':addButtonLabelCode }" />
     <c:if test="${empty addButtonLabel}">
@@ -48,20 +50,18 @@
     <c:set var="columnDefs">
     	<json:array><jsp:doBody/></json:array>
     </c:set>
-    <debug:log message="Columns: ${columnDefs}"/>
-    <c:set var="columnDefinitions" value="fl" scope="request"/>
+    <c:set var="columnDefinitions" value="false" scope="request"/>
    
     <c:set var="fieldNames" value="true" scope="request"/>
     <c:set var="fieldNames">
     	<json:array><jsp:doBody/></json:array>
     </c:set>
-    <debug:log message="Fields: ${fieldNames}"/>
     <c:set var="fieldNames" value="false" scope="request"/>
     
-    <c:if test="${canAddNew}">
-    	<fields:button type="link" id="${id}_addItem" labelCode="${addButtonLabelCode}" cssClass="${addButtonCssClass}" targetUrl="${addButtonUrl}"/>
+    <c:if test="${canAdd}">
+    	<fields:button type="link" id="${htmlTableId}_addItem" labelCode="${addButtonLabelCode}" cssClass="${addButtonCssClass}" style="float:right;" targetUrl="${addButtonUrl}" preventDefault="true" />
     </c:if>
-    <table id="${id}" class="${cssClass}" style="${style}table-layout:fixed;" >
+    <table id="${htmlTableId}" class="${cssClass}" style="${style}table-layout:fixed;" >
     <thead></thead>
     <tbody>
        <c:set var="getContents" value="true" scope="request" />
@@ -109,10 +109,39 @@
         	bJQueryUI: true,
         	bAutoWidth: false,
         	fnInitComplete: function( oSettings ) { 
-        		$('#${id}_filter input').addClass('search-query');
-	            $('#${id}_length select').addClass('span1');
-	            var $parent = $('#${id}_length').parent();
-	            $parent.append($('#${id}_addItem_mepButton'));
+        		$('#${htmlTableId}_filter input').addClass('search-query');
+	            $('#${htmlTableId}_length select').addClass('span1');
+	            var $parent = $(this).siblings('.ui-widget-header:first-child');
+	            var $add = $('#${htmlTableId}_addItem_mepButton');
+	            if(<c:out value="${not deferAdd}"/>) {
+	            	$add.on('click', function(e) {
+	            		e.preventDefault();
+	            		//pleaseWait();
+	                    $.ajax({
+	                        cache: false,
+	                        complete: done,
+	                        //contentType: false,
+	                        //context: $ctx,
+	                        dataType: 'json',
+	                        error: function(jqXHR, textStatus, errorThrown) {
+	                            alert("An exception occured at the server."); // TODO: Exception Handling
+	                        },
+	                        //processData: false,
+	                        success: function(data, textStatus, jqXHR) {
+	                            if (data.success) {
+	                                
+	                            } else {
+	                                alert("The server responded with an error.")
+	                            	// TODO: Error Handling
+	                            }
+	                        },
+	                        type: 'GET',
+	                        url: '<c:url value="${addButtonUrl}"/>'
+	                    })
+	            		
+	            	});
+	            };
+	            $parent.append($add);
 	            var $tl = $(this).siblings('.mep-header').children('.dataTables_length');
 	            var $p = $(this).siblings('.mep-footer').children('.dataTables_paginate');
 	            $tl.insertBefore($p);
@@ -122,9 +151,8 @@
 	            sUrl: '<c:url value="${labelsProperty}" />'
 	        }</c:if>
 	        ,aoColumns: <c:out value="${columnDefs}" escapeXml="false" />
-	     };
-   		var dataTable = $('#${id}').dataTable(params);
+	    };
+   		var dataTable = $('#${htmlTableId}').dataTable(params);
     });
-   
     </script>
 </jsp:root>

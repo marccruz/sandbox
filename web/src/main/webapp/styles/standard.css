@@ -415,4 +415,46 @@ div {
 	-moz-border-radius-topright: 0; 
 }
 
-.dataTables_wrapper 
+.mep-button {
+   display: inline-block !important;
+   margin:  0 5px;
+   min-width: 75px;
+   vertical-align: middle;
+}
+
+.mep-button > div {
+    line-height: 16px;
+    cursor: pointer;
+    color: #777;
+    border: solid 1px #BBB;
+    border-radius: 0.5ex;
+    -webkit-border-radius: 0.5ex;
+    -moz-border-radius: 0.5ex;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 0px 14px;
+    background: buttonface;
+    text-decoration: none;
+    text-align: center;
+}
+
+.mep-button > div > * {
+    border: none;
+    color: #777;
+    font-weight: bold;
+    font-size: 11px;
+    text-transform: uppercase;
+    text-decoration: none;
+    line-height: 20px;
+    cursor: pointer;
+    width: auto;
+}
+
+.mep-button[disabled],
+.mep-button > div[disabled],
+.mep-button > div > *[disabled] {
+    opacity: 0.5;
+    cursor: default;
+ }
+ 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+  xmlns:form="urn:jsptagdir:/WEB-INF/tags/form" xmlns:fields="urn:jsptagdir:/WEB-INF/tags/form/fields" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  <spring:message code="label_users_create" htmlEscape="false" var="title"/>
+  <spring:message code="application_name" htmlEscape="false" var="app_name"/>
+   <h3>
+     <spring:message arguments="${app_name}" code="welcome_titlepane"/>
+   </h3>
+   <form:create id="create_com_serranomobile_sandbox_web_domains_User" modelAttribute="user" path="user">
+       <fields:input id="c_com_serranomobile_sandbox_web_domains_User_accountNumber" field="accountNumber" required="true"/>
+       <fields:input id="c_com_serranomobile_sandbox_web_domains_User_firstName" field="firstName" required="true"/>
+       <fields:input id="c_com_serranomobile_sandbox_web_domains_User_lastName" field="lastName" required="true"/>
+   </form:create>
+</div>

@@ -14,3 +14,18 @@ web mvc controller --class ~.controllers.HomeController
 // [failed] entity mongo --class com.serranomobile.sandbox.web.domains.User
 // Spring Roo 1.2.1.RELEASE [rev 6eae723] log closed at 2012-08-03 11:32:35
 // Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-05 10:26:08
+// Spring Roo 1.2.1.RELEASE [rev 6eae723] log opened at 2012-08-07 01:06:58
+help mvc
+hint
+help
+help web
+// [failed] web mvc install view --path src/main/webapp/WEB-INF/views/users --viewName users/create --title Users 
+// [failed] web mvc install view --path src/main/webapp/web-inf/views/users --viewName create --title User 
+// [failed] web mvc install view --path /src/main/webapp/web-inf/views/users/ --viewName create --title Users
+web mvc install view --path views/users --viewName create --title User 
+web mvc install view --path users --viewName create --title User 
+help
+mongo setup
+mongo setup 
+web mvc install view --path users --viewName list --title Users
+web mvc install view --path users --viewName update --title User 

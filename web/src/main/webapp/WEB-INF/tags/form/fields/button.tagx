@@ -53,10 +53,10 @@
                     <div class="mep-button-inner">
                         <c:choose>
                             <c:when test="${disabled}">
-                                <input id="${id}" name="${name}" class="${cssClass}" type="${type}" value="${label}" disabled="true"><!-- This is needed --></input>
+                                <input id="${id}" name="${name}" class="${cssClass}" type="${type}" value="${label}" disabled="true"/><!-- This is needed -->
                             </c:when>
                             <c:otherwise>
-                                <input id="${id}" name="${name}" class="${cssClass}" type="${type}" value="${label}"><!-- This is neeeded --></input>
+                                <input id="${id}" name="${name}" class="${cssClass}" type="${type}" value="${label}"/><!-- This is needed -->
                             </c:otherwise>
                         </c:choose>
                     </div>

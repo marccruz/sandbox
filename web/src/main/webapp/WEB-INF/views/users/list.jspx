@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:spring="http://www.springframework.org/tags" xmlns:util="urn:jsptagdir:/WEB-INF/tags/util" 
+  xmlns:grid="urn:jsptagdir:/WEB-INF/tags/grid" xmlns:debug="urn:jsptagdir:/WEB-INF/tags/debug" version="2.0">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <jsp:output omit-xml-declaration="yes"/>
+  <spring:message code="label_users_list" htmlEscape="false" var="title"/>
+  <util:panel id="title" title="${title}">
+    <spring:message code="application_name" htmlEscape="false" var="app_name"/>
+    <h3>
+      <spring:message arguments="${app_name}" code="welcome_titlepane"/>
+    </h3>
+    
+    <grid:table htmlTableId="users_table" dataObjectId="user" items="${users}" showPaginationInfo="false" canAdd="true" addButtonUrl="/users?form">
+  		<grid:column label="Account Number" field="accountNumber" width="33%"/>
+  		<grid:column label="First Name" field="firstName" width="33%"/>
+  		<grid:column label="Last Name" field="lastName" width="33%"/>
+  	</grid:table>
+  </util:panel>
+</div>
