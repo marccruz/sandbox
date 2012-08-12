@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<div xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:page="urn:jsptagdir:/WEB-INF/tags/form" version="2.0">
+    <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+    <jsp:output omit-xml-declaration="yes"/>
+    <page:show id="ps_com_serranomobile_sandbox_domains_User" object="${user}" path="/users" z="kLTpjBiY4+AmkTGexzg8vzSKO0U=">
+        <field:display field="id" id="s_com_serranomobile_sandbox_domains_User_id" object="${user}" z="U4tIm7GgAn9IdxrCyQi9rrFVIQM="/>
+        <field:display field="firstName" id="s_com_serranomobile_sandbox_domains_User_firstName" object="${user}" z="OXrzjgVUNDT/cHyjTbRlZgl+O4Y="/>
+        <field:display field="lastName" id="s_com_serranomobile_sandbox_domains_User_lastName" object="${user}" z="vl+bDvLj2fmX40U5skK7dFmlRRM="/>
+        <field:display date="true" dateTimePattern="${user_datecreated_date_format}" field="dateCreated" id="s_com_serranomobile_sandbox_domains_User_dateCreated" object="${user}" z="8cZy6j+p98KMKN3qELk2YKIPH/0="/>
+    </page:show>
+</div>
