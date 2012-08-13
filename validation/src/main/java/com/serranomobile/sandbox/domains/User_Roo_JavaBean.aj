@@ -40,4 +40,12 @@ privileged aspect User_Roo_JavaBean {
         this.dateCreated = dateCreated;
     }
     
+    public String User.getEmail() {
+        return this.email;
+    }
+    
+    public void User.setEmail(String email) {
+        this.email = email;
+    }
+    
 }

@@ -1,14 +1,28 @@
 /* main elements */
 
-body,div,td {
+body,div,td,textarea {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color: #666;
+	color: #212121;
 }
 
 body {
 	background-color: #fff;
 	text-align: center;
+}
+
+div {
+    border-radius: 0.5ex;
+    -webkit-border-radius:0.5ex;
+    -moz-border-radius:0.5ex;
+    outline: none;
+}
+    
+
+.center {
+	text-align: center;
+	display: table-cell;
+	vertical-align:	middle;	
 }
 
 #header {
@@ -27,6 +41,12 @@ body {
 	
 	overflow:hidden;
 	display:block;
+}
+
+.nowrap { 
+	white-space: nowrap; 
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 /* header and footer elements */
@@ -65,7 +85,7 @@ body {
 
 #menu h2 {
 	color: #fff;
-	background: #648C1D;
+	background: rgb(243,133,20);
 	text-transform: uppercase;
 	font-weight:bold;
 	font-size: 12px;
@@ -79,7 +99,7 @@ body {
 }
 
 #menu a:hover {
-	color: #648C1D;
+	color: #555555;
 	background: #fff;
 }
 
@@ -90,26 +110,14 @@ body {
 	border-top:1px solid #999999;
 }
 
-#footer .new {
-	float:left;
-}
-
-#footer a:link {color: #7db223;}
-
-.quicklinks {
-	clear:both; 
-	padding-bottom: 15px
-}
-.quicklinks span {
-	float: right;
-}
+#footer a:link {color: #757575;}
 
 table.navigation {
 	border: 0px;
 }
 
 label {
-	width:100px;
+	width:110px;
 	float:left;
 	margin-left: 5px;
 	margin-top: 0px;
@@ -117,16 +125,27 @@ label {
 
 input {
 	height:20px;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 
 input, textarea, select {
 	border:1px solid #B3B3B3;
 }
 
+select{
+	color: #666;
+	vertical-align: text-bottom;
+}
+
 input.image {
 	border: none;
 	height: auto;
 	vertical-align: middle;
+}
+
+.display {
+	height: 15px;
 }
 
 submit {
@@ -150,7 +169,7 @@ a.menu, a.menu:link, a.menu:visited {display:block; width:150px; height:25px;}
 
 h1,h2,h3 {
 	font-family: Helvetica, sans-serif;
-	color: #7db223;
+	color: #757575;
 }
 
 h1 {
@@ -178,12 +197,7 @@ h4 {
 	color: red;
 	font-weight: bold;
 	display: block;
-	margin-left: 105px;
-}
-
-a {
-	text-decoration: underline;
-	font-size: 12px;
+	text-align:right;
 }
 
 a img {
@@ -191,16 +205,8 @@ a img {
 	vertical-align: middle;
 }
 
-tr:nth-child(odd) {
-	background-color: #FFFFFF;
-}
-
-tr:nth-child(even) {
-	background-color: #EFEFEF;
-}
-
 a:link {
-	color: #7db223;
+	color: #757575;
 }
 
 a:hover {
@@ -208,11 +214,11 @@ a:hover {
 }
 
 a:active {
-	color: #7db223;
+	color: #757575;
 }
 
 a:visited {
-	color: #7db223;
+	color: #757575;
 }
 
 li {
@@ -234,6 +240,14 @@ table {
 	width: 100%
 }
 
+tr:nth-child(odd) {
+	background-color: #FFFFFF;
+}
+
+tr:nth-child(even) {
+	background-color: #EFEFEF;
+}
+
 table table {
 	margin: -5px 0;
 	border: 0px solid #e0e7d3;
@@ -251,7 +265,7 @@ table td form {
 	margin: 0px;
 }
 
-table th {
+table th, tfoot td {
 	font-size: 0.9em;
 	text-align: left;
 	font-weight: bold;
@@ -261,13 +275,15 @@ table th {
 
 table thead {
 	font-weight: bold;
-	font-style: italic;
-	background-color: #BBBBBB;
+	background-color: #515151;
+	color: white;
 }
 
 table a:link {color: #303030;}
 
-.utilbox {width: 18px;}
+table span.new { float: left; }
+
+table span.list-size { float: right; }
 
 caption {
 	caption-side: top;
@@ -319,23 +335,36 @@ fieldset th {
 	padding-left: 25px;
 }
 
-.table-buttons {
-	background-color:#fff;
-	border:none;
-}
-
-.table-buttons td {
-	border:none;
-}
-
-.submit input {
+.button a {
 	border: 1px solid #BBBBBB;
 	color:#777777;
-	padding:2px 7px;
+	padding:5px 14px;
 	font-size:11px;
 	text-transform:uppercase;
 	font-weight:bold;
 	height:24px;
+	border-radius:0.5ex;-webkit-border-radius:0.5ex;-moz-border-radius:0.5ex; 
+	background: buttonface;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.cancel a {
+	height: 22px;
+}
+
+.button {
+	border: 1px solid #BBBBBB;
+	color:#777777;
+	padding:2px 14px;
+	font-size:11px;
+	text-transform:uppercase;
+	font-weight:bold;
+	height:14px;
+	border-radius:0.5ex;-webkit-border-radius:0.5ex;-moz-border-radius:0.5ex; 
+	background: buttonface;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .updated {
@@ -351,10 +380,6 @@ fieldset th {
 	color:#888888;
 }
 
-.dijitArrowButton {
-	height: 20px;
-}
-
 .dijitTextArea{
 	min-height:5.5em !important;
 	max-height:22em !important;
@@ -367,7 +392,6 @@ fieldset th {
 	max-height:18em !important;
 }
 
-.flag {
-	height: 11px;
-	width: 16px;
+tr.empty > td {
+	padding:5px;	
 }

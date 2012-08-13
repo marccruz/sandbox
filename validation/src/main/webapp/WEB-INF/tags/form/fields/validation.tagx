@@ -1,0 +1,17 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  	<jsp:output omit-xml-declaration="yes" />
+	
+  	<jsp:directive.attribute name="name" type="java.lang.String" required="true" rtexprvalue="true" description="The name of the type of validation to perform. Supported validation types are 'required', 'min', 'max', 'minLength', 'maxLength', 'email', 'url'"/>
+  	<jsp:directive.attribute name="value" type="java.lang.String" required="true" rtexprvalue="true" description="The value to validate against."/>
+  	<jsp:directive.attribute name="message" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this field, will default to a message bundle if not supplied" />
+  	
+	<script type="text/javascript">
+	$('#${currInput}').rules('add', {
+		'${name}': ${value}
+		<c:if test="${not empty message}">
+			,message: '${message}'
+		 </c:if>
+	})
+	</script>
+	
+</jsp:root>

@@ -7,5 +7,6 @@
         <field:input field="firstName" id="c_com_serranomobile_sandbox_domains_User_firstName" z="QiXZDyaLwRnI2TxOfg0lId8/eKE="/>
         <field:input field="lastName" id="c_com_serranomobile_sandbox_domains_User_lastName" z="f0JZXts4TAlcuplOOZTxqNU63ZM="/>
         <field:datetime dateTimePattern="${user_datecreated_date_format}" field="dateCreated" id="c_com_serranomobile_sandbox_domains_User_dateCreated" z="m8qGopxLpONhZ1kkySkRmi76fBM="/>
+        <field:input field="email" id="c_com_serranomobile_sandbox_domains_User_email" validationMessageCode="field_invalid_email" z="28z+M2JuNtC+OVDBygNpgroChYQ="/>
     </form:update>
 </div>

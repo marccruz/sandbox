@@ -1,0 +1,64 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+    xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" 
+    xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+    
+    <jsp:output omit-xml-declaration="yes" />
+    <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
+    <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this button, will default to a message bundle if not supplied" />
+    <jsp:directive.attribute name="labelCode" type="java.lang.String" required="false" rtexprvalue="true" description="Key for label message bundle if label is not supplied" />  
+    <jsp:directive.attribute name="type" type="java.lang.String" required="false" rtexprvalue="true" description="The type of button. Supported types are 'button', 'submit', 'reset', 'link'. (defaults to 'button')"/>  
+    <jsp:directive.attribute name="render" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicate if the contents of this tag and all enclosed tags should be rendered (default 'true')" />
+    <jsp:directive.attribute name="targetUrl" type="java.lang.String" required="false" rtexprvalue="true" description="If not emtpy, specifies button is a link button and also the target url."/>
+    <jsp:directive.attribute name="iconClass" type="java.lang.String" required="false" rtexprvalue="true" description="Css class for the icons button"/>
+    <jsp:directive.attribute name="cssClass" type="java.lang.String" required="false" rtexprvalue="true" description="The css class of the button" />
+    <jsp:directive.attribute name="style" type="java.lang.String" required="false" rtexprvalue="true" description="The styles to apply to the button."/>
+    <jsp:directive.attribute name="preventDefault" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if the button's default use should be prevented (defaults to false)"/>
+    <jsp:directive.attribute name="disabled" type="java.lang.Boolean" required="false" rtexprvalue="true" description="Indicates if the button should be disabled. Used only if type is 'button', 'submit', or 'reset'. (defaults to false)"/>
+    <c:if test="${empty render or render}">
+        <c:if test="${empty label}">
+            <c:if test="${empty labelCode}">
+                <c:set var="labelCode" value="${fn:substringAfter(id,'_')}" />
+            </c:if>
+            <spring:message code="${labelCode}" var="label"/>
+        </c:if>
+                
+        <c:set var="type" value="${empty type? 'button' : type}"/>
+        
+        <c:set var="preventDefault" value="${empty preventDefault? false : preventDefault}"/>
+        
+        <c:set var="disabled" value="${empty disabled? false : disabled}"/>
+        
+        <div id="${id}_mepButton" class="mep-button" style="${style}">
+            <c:if test="${not empty iconCss}">
+                <img class="${iconCls}"/>
+            </c:if>
+            <c:choose> 
+                <c:when test="${type eq 'link'}">
+                    <div class="mep-button-inner link"><a id="${id}" href="${targetUrl}" class="link ${cssClass}">${label}</a></div>
+                </c:when>
+                <c:otherwise>
+                    <div class="mep-button-inner">
+                        <c:choose>
+                            <c:when test="${disabled}">
+                                <input id="${id}" class="${cssClass}" type="${type}" value="${label}" disabled="true"/>
+                            </c:when>
+                            <c:otherwise>
+                                <input id="${id}" class="${cssClass}" type="${type}" value="${label}"/>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+            <script type="text/javascript">
+            dojo.addOnLoad(function() {
+                if ('${preventDefault}' == 'true') {       // check if default action should be prevented
+                    dojo.connect(dojo.byId('${id}'), 'onclick', function(e) {
+                        e.preventDefault();
+                    });
+                }
+            });
+            </script>
+        </div>
+    </c:if>
+    
+</jsp:root>

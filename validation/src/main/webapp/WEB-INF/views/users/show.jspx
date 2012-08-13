@@ -7,5 +7,6 @@
         <field:display field="firstName" id="s_com_serranomobile_sandbox_domains_User_firstName" object="${user}" z="OXrzjgVUNDT/cHyjTbRlZgl+O4Y="/>
         <field:display field="lastName" id="s_com_serranomobile_sandbox_domains_User_lastName" object="${user}" z="vl+bDvLj2fmX40U5skK7dFmlRRM="/>
         <field:display date="true" dateTimePattern="${user_datecreated_date_format}" field="dateCreated" id="s_com_serranomobile_sandbox_domains_User_dateCreated" object="${user}" z="8cZy6j+p98KMKN3qELk2YKIPH/0="/>
+        <field:display field="email" id="s_com_serranomobile_sandbox_domains_User_email" object="${user}" z="2XMeAosii2h6sL75xonMIJKju+s="/>
     </page:show>
 </div>

@@ -22,4 +22,6 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(style = "M-")
     private Date dateCreated;
+
+    private String email;
 }

@@ -4,13 +4,22 @@
 
   <spring:theme code="styleSheet" var="roo_css" />
   <spring:url value="/${roo_css}" var="roo_css_url" />
+  <spring:url value="/styles/manager.css" var="manager_css_url"/>
+  <spring:url value="/styles/jquery.tooltip.css" var="tooltip_css_url"/>
   <spring:url value="/resources/dojo/dojo.js" var="dojo_url" />
   <spring:url value="/resources/dijit/themes/tundra/tundra.css" var="tundra_url" />
   <spring:url value="/resources/spring/Spring.js" var="spring_url" />
   <spring:url value="/resources/spring/Spring-Dojo.js" var="spring_dojo_url" />
+  <spring:url value="/resources/scripts/jquery.js" var="jquery_url"/>
+  <spring:url value="/resources/scripts/jquery-ui.custom.min.js" var="jquery_ui_url"/>
+  <spring:url value="/resources/scripts/jquery.validate.js" var="jquery_validate_url"/>
+  <spring:url value="/resources/scripts/additional-methods.js" var="additional_methods_url"/>
+  <spring:url value="/resources/scripts/jquery.tooltip.js" var="tooltip_url"/>
   <spring:url value="/resources/images/favicon.ico" var="favicon" />
   <link rel="stylesheet" type="text/css" href="${tundra_url}" />
   <link rel="stylesheet" type="text/css" media="screen" href="${roo_css_url}" />
+  <link rel="stylesheet" type="text/css" href="${manager_css_url}"/>
+  <link rel="stylesheet" type="text/css" href="${tooltip_css_url}"/>
   <link rel="SHORTCUT ICON" href="${favicon}" />
 
   <!-- Get the user local from the page context (it was set by Spring MVC's locale resolver) -->
@@ -24,6 +33,11 @@
   <script src="${dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script src="${spring_url}" type="text/javascript"><!-- /required for FF3 and Opera --></script>
   <script src="${spring_dojo_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jquery_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jquery_ui_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${tooltip_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${jquery_validate_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${additional_methods_url}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script language="JavaScript" type="text/javascript">dojo.require("dojo.parser");</script>
 
 </jsp:root>

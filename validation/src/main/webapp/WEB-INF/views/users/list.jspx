@@ -8,6 +8,7 @@
             <table:column id="c_com_serranomobile_sandbox_domains_User_firstName" property="firstName" z="7/ZGhVEwE2dkYEVO/Y702M4X41w="/>
             <table:column id="c_com_serranomobile_sandbox_domains_User_lastName" property="lastName" z="1VPIRoPuCvHuHQVMhHdrfSwtReg="/>
             <table:column date="true" dateTimePattern="${user_datecreated_date_format}" id="c_com_serranomobile_sandbox_domains_User_dateCreated" property="dateCreated" z="UWEunbxxtl4XxFZ6HSTs8qLfSl4="/>
+            <table:column id="c_com_serranomobile_sandbox_domains_User_email" property="email" z="6gslWV07htHOpq0adwt8Vaxay5Y="/>
         </table:table>
     </page:list>
 </div>

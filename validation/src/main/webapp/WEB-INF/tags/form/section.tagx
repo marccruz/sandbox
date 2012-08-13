@@ -1,0 +1,45 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+    xmlns:spring="http://www.springframework.org/tags" xmlns:form="http://www.springframework.org/tags/form" 
+    xmlns:field="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0">
+  
+    <jsp:output omit-xml-declaration="yes" />
+    <jsp:directive.attribute name="id" type="java.lang.String" required="true" rtexprvalue="true" description="The identifier for this tag (do not change!)" />
+    <jsp:directive.attribute name="label" type="java.lang.String" required="false" rtexprvalue="true" description="The label used for this object, will default to a message bundle if not supplied" />
+    <jsp:directive.attribute name="labelCode" type="java.lang.String" required="false" rtexprvalue="true" description="Key for label message bundle if label is not supplied" />
+    <jsp:directive.attribute name="name" type="java.lang.String" required="false" rtexprvalue="true" description="The name attribute of the element."/>
+    <jsp:directive.attribute name="style" type="java.lang.String" required="false" rtexprvalue="true" description="Css style to assign to element."/>
+    <jsp:directive.attribute name="iconCssClass" type="java.lang.String" required="false" rtexprvalue="true" description="If a tab content, the css class for the tab icon."/>
+    <jsp:directive.attribute name="showButtons" type="java.lang.Boolean" required="false" rtexprvalue="true" description="If true, show buttons bar when on this section.  Defaults to true."/>
+    
+    <c:if test="${empty label}">
+      <c:if test="${empty labelCode}">
+        <c:set var="labelCode" value="label_${fn:substringAfter(id,'_')}" />
+      </c:if>
+      <spring:message code="${fn:toLowerCase(labelCode)}" var="label" htmlEscape="false" />
+    </c:if>
+    
+     <c:if test="${empty showButtons}">
+       <c:set var="showButtons" value="true" />
+     </c:if>    
+    
+    <div id="${id}_section" name="${name}" class="section" style="${style}">
+        <jsp:doBody />
+    </div>
+    
+    <script type="text/javascript">
+    Spring.addDecoration(
+		new Spring.ElementDecoration({
+			elementId:'${id}_section',
+			paramName: "${param.name}",
+			name: '${name}',
+			widgetType : 'dijit.layout.ContentPane', 
+            widgetAttrs : {
+            	id: '${id}_section_content',
+                title: '${label}',
+                iconClass: '${iconCssClass}',
+                showButtons: '${showButtons}'
+            }
+        })
+    );
+    </script>
+</jsp:root>
