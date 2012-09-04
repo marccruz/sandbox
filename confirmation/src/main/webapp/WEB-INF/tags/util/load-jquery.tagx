@@ -4,7 +4,8 @@
   
   <spring:url value="/scripts/jquery.js" var="jquery" />
   <spring:url value="/scripts/jquery-ui.custom.min.js" var="jquery-ui" />
-  
+  <spring:url value="/scripts/dialogbox.js" var="dialogbox"/>
   <script src="${jquery}" type="text/javascript"><!-- required for FF3 and Opera --></script>
   <script src="${jquery-ui}" type="text/javascript"><!-- required for FF3 and Opera --></script>
+  <script src="${dialogbox}" type="text/javascript"><!-- required for FF3 and Opera --></script>
 </jsp:root>

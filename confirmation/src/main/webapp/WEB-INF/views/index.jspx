@@ -10,5 +10,6 @@
   <fields:button id="btnLink" type="button" targetUrl="http://google.com" label="Link"/>
   <br/> 
   <fields:link id="link" href="http://google.com" label="Link"/>
+  
   </util:panel>
 </div>
