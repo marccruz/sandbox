@@ -1,0 +1,268 @@
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" xmlns:fields="urn:jsptagdir:/WEB-INF/tags/form/fields" xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:spring="http://www.springframework.org/tags" xmlns:json="http://www.atg.com/taglibs/json" xmlns:debug="urn:jsptagdir:/WEB-INF/tags/debug" xmlns:nav="urn:jsptagdir:/WEB-INF/tags/navigation"  version="2.0"
+>
+    <jsp:output omit-xml-declaration="yes" />
+
+    <jsp:directive.attribute name="htmlTableId" required="true" type="java.lang.String" rtexprvalue="true" description="DOM id of the HTML table." />
+    <jsp:directive.attribute name="data" required="true" rtexprvalue="true" type="java.util.Collection" description="Collection of data used to populate the table." />
+    <jsp:directive.attribute name="dataObjectId" required="true" type="java.lang.String" rtexprvalue="false" description="Name of the object representing the current row." />
+    <jsp:directive.attribute name="identifierField" required="false" type="java.lang.String" rtexprvalue="false" description="Name of property field that uniquely identifies each item. (defaults to id)" />
+    <jsp:directive.attribute name="cssClass" required="false" type="java.lang.String" rtexprvalue="false" description="CSS class(es) of the HTML table." />
+    <jsp:directive.attribute name="style" required="false" type="java.lang.String" rtexprvalue="false" description="CSS style of the HTML table." />
+    <jsp:directive.attribute name="showPaginationInfo" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Show or hide the pagination info. (defaultsto false)." />
+    <jsp:directive.attribute name="paginate" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable pagination. (defaults to false)" />
+    <jsp:directive.attribute name="filterable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enables or disables filter feature for the table. (defaults to false)" />
+    <jsp:directive.attribute name="sortable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Enable or disable sorting of columns. Sorting of individual columns can be disabled by the  'sortable' option for each column. (defaults to false)" />
+    <jsp:directive.attribute name="searchable" required="false" type="java.lang.Boolean" description="Enables or disables search feature. (default to false)" />
+    <jsp:directive.attribute name="lengthChangeEditable" required="false" rtexprvalue="true" type="java.lang.Boolean" description="Specifies whether to allow users to modify how many items are displayed on the grid.(defaults to false)" />
+    <jsp:directive.attribute name="deleteUrl" required="false" rtexprvalue="true" type="java.lang.String"
+        description="Template for the url that will be used to delete an item. If a template is not specified deleting will post to the current url with a DELETE action. If one is specified it must contain a placeholder for the identifier of the object to delete."
+    />
+    <jsp:directive.attribute name="canDeleteRowExpr" required="false" rtexprvalue="true" type="java.lang.String" description="An expression to determine whether the current row can be deleted."/>
+    <jsp:directive.attribute name="asynchronous" required="false" rtexprvalue="true" type="java.lang.Boolean"
+        description="Specifies whether to perform an add, delete and/or edit asynchronously or whether to piggyback off a post action and add to the posted data any changes to the items in table. "
+    />
+    <jsp:directive.attribute name="addButtonUrl" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, used to fill href attribute of a link. Warning This attribute is evaluated with &lt;c:url&gt;" />
+    <jsp:directive.attribute name="addButtonCssClass" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, appended to the CSS attribute of the link." />
+    <jsp:directive.attribute name="addButtonLabelCode" required="false" rtexprvalue="true" type="java.lang.String" description="If addButton is enabled, key for label message bundle if addButtonlabel is not supplied" />
+
+    <jsp:directive.attribute name="filteringUrl" required="false" rtexprvalue="true" type="java.lang.String" description="The url used to filter campaigns." />
+    
+    <jsp:directive.variable name-from-attribute="dataObjectId" alias="row" variable-class="java.lang.Object" scope="NESTED" />
+
+    <c:set var="showPaginationInfo" value="${empty showPaginationInfo? false : showPaginationInfo}" />
+    <c:set var="paginate" value="${empty paginate? true : paginate}" />
+    <c:set var="sortable" value="${empty sortable? true : sortable}" />
+    <c:set var="searchable" value="${empty searchable? false : sortable}" />
+    <c:set var="filterable" value="${empty filterable? not empty filteringUrl : filterable}" />
+    <c:set var="lengthChangable" value="${empty lengthChangable? true : lengthChangable}" />
+
+    <c:set var="colCounter" value="0" scope="request" />
+    <c:set var="delimitor" value="|" scope="request" />
+    <c:set var="canAddNew" value="${not empty addButtonUrl}" />
+    <c:set var="canDelete" value="${not empty deleteUrl}" />
+    <c:set var="addButtonUrl" value="${empty addButtonUrl ? '' : addButtonUrl}" />
+    <c:set var="addButtonLabelCode" value="${empty addButtonLabelCode ? 'global_label_add':addButtonLabelCode }" />
+    <c:if test="${empty addButtonLabel}">
+        <c:if test="${not empty addButtonLabelCode}">
+            <c:set var="addButtonLabel">
+                <spring:message code="${addButtonLabelCode}" />
+            </c:set>
+        </c:if>
+    </c:if>
+    <c:set var="addButtonCssClass" value="${empty addButtonCssClass ? 'btn' : addButtonCssClass}" />
+    <c:set var="identifierField" value="${empty identifierField ? 'id' : identifierField}" />
+    <c:set var="cssClass" value="${empty cssClass ? 'table table-striped table-bordered table-condensed' : cssClass}" />
+    <c:set var="style" value="${empty style ? '' : style}" />
+    <c:set var="delimitor" value="|" scope="request" />
+
+    <c:set var="columnDefinitions" value="true" scope="request" />
+    <c:set var="cssClasses" value="" scope="request"/>
+    
+    <spring:message code="label_table_grid_edit_tag" var="tag_column_title" htmlEscape="false"/>
+    <c:set var="columnDefs">
+        <json:array>
+            <jsp:doBody />
+            <c:if test="${canDelete}">
+                <json:object>
+                    <json:property name="bSortable" value="false" />
+                    <json:property name="sName" value="delete" />
+                    <json:property name="sClass" value="table-cell delete" />
+                </json:object>
+            </c:if>
+        </json:array>
+    </c:set>
+    <c:set var="listCssClass" value="${fn:split(cssClasses, delimitor)}" scope="request"/>
+    <c:set var="columnDefinitions" value="false" scope="request" />
+
+    <c:if test="${canAddNew}">
+        <fields:button type="link" id="${htmlTableId}_addItem" labelCode="${addButtonLabelCode}" cssClass="${addButtonCssClass}" style="float:right;" targetUrl="${addButtonUrl}" />
+    </c:if>
+    
+    <table id="${htmlTableId}" class="${cssClass}" style="${style}table-layout:fixed;">
+        <thead>
+           <c:if test="${filterable}">
+		    <nav:path name="imagesRoot"/>
+			<div class="filters-container">
+				View: &amp;nbsp;&amp;nbsp;<select class="filter" onchange="filter(this)"><option value="hide_archive">Active</option><option value="show_archive">Archive</option></select>
+		    </div>
+	    </c:if>
+        </thead>
+        <tbody>
+            <c:set var="getContents" value="true" scope="request" />
+            <c:forEach var="row" items="${data}" varStatus="status">
+                <c:set var="properties" value="" scope="request" />
+                <c:set var="contents" value="" scope="request" />
+                <jsp:doBody />
+                <c:set var="listContent" value="${fn:split(contents, delimitor)}" scope="request" />
+                <c:set var="listProperty" value="${fn:split(properties, delimitor)}" scope="request" />
+                <c:catch>
+                    <spring:eval var="itemId" expression="row.${identifierField}" />
+                </c:catch>
+                <tr data-object-id="${itemId}" class="row-item">
+                    <c:forEach begin="0" end="${fn:length(listContent) - 1}" varStatus="s">
+                        <td>
+                            <c:set var="columnContent" value="${listContent[s.count-1]}" />
+                            <c:set  var="property" value="${listProperty[s.count - 1]}" />
+                            <div class="td-inner ${listCssClass[s.count-1]}" style="overflow: hidden; text-overflow: ellipsis;">
+                                <c:choose>
+                                    <c:when test="${empty columnContent or columnContent eq 'null'}">
+                                        <c:choose>
+                                            <c:when test="${empty property or property eq 'null'}">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:catch var="catchException">
+                                                    <spring:eval expression="row.${property}" var="value" />
+                                                    <c:out value="${value eq 'null'? '' : value}" />
+                                                </c:catch>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:out value="${columnContent}" escapeXml="false" />
+                                    </c:otherwise>
+                                </c:choose>
+                            </div></td>
+                    </c:forEach>
+                    <c:if test="${canDelete}">
+	                    <spring:eval expression="${empty canDeleteRowExpr? true : canDeleteRowExpr}" var="canDeleteRow"/>      
+	                    <td>
+	                    <c:if test="${canDeleteRow}">
+	                        <spring:url var="url" value="${deleteUrl}">
+	                            <spring:param name="id" value="${itemId}" />
+	                        </spring:url>
+                        	<div alt="Delete" class="grid-icon delete" for="${url}" />
+	                    </c:if>
+	                    </td>
+                    </c:if>
+                </tr>
+            </c:forEach>
+            <c:set var="getContents" value="false" scope="request" />
+        </tbody>
+    </table>
+    
+    <spring:message code="delete_single_short" var="title_label" htmlEscape="false"/>
+    <spring:message code="delete_single_long" var="dialog_label" htmlEscape="false"/>
+    <spring:message code="delete_single_bttn" var="delete_bttn_label" htmlEscape="false"/>
+    <spring:message code="button_apply" var="apply_bttn_label" htmlEscape="false"/>
+    <spring:message code="ajax_error" var="ajax_error_msg" htmlEscape="false"/>
+    <div id="dialog-confirm-delete" title="${title_label}" style="display:none" class="confirmation">
+		<p><span class="confirmation" style="float:left; margin:0 7px 20px 0;">${dialog_label}</span></p>
+	</div>
+
+    <script type="text/javascript">
+    	var dataTable;
+	    $(document).ready(function() {
+	    	var params = {
+	    		bInfo: <c:out value="${showPaginationInfo}"/>,
+	        	bPaginate: <c:out value="${paginate}"/>,
+	        	bFilter: <c:out value="${searchable}"/>,
+	        	bSort: <c:out value="${sortable}"/>,
+	        	sPaginationType: 'full_numbers',
+	        	bLengthChange: <c:out value="${lengthChangable}"/>,
+	        	aaSorting: [],
+	        	bJQueryUI: true,
+	        	bAutoWidth: false,
+	        	fnInitComplete: function( oSettings ) { 
+	        		$('#${htmlTableId}_filter input').addClass('search-query');
+		            $('#${htmlTableId}_length select').addClass('span1');
+		            var $header = $(this).siblings('.ui-widget-header:first-child');
+		            var $footer = $(this).siblings('.ui-widget-header:last-child');
+	                var $add = $('#${htmlTableId}_addItem_mepButton');
+		            $header.append($add);
+		            var $tl = $header.children('.dataTables_length');
+		            var $p = $footer.children('.dataTables_paginate');
+		            $tl.insertBefore($p);
+		            
+		            // Hook up delete button
+		            $('#${htmlTableId} tbody').on('click', 'tr > td.delete > div.delete', function(e) {
+		            	confirmDelete(this);
+		            });
+	        	}
+	        	<c:if test="${labelsProperty}">
+		        ,oLanguage: { 
+		            sUrl: '<c:url value="${labelsProperty}" />'
+		        }</c:if>
+		        ,aoColumns: <c:out value="${columnDefs}" escapeXml="false" />
+		     };
+	    	
+	    	/* Init the table */
+	   		dataTable = $('#${htmlTableId}').dataTable(params);
+	   		
+	   		var confirmDelete = function(item){
+	   			$('#dialog-confirm-delete').dialog({
+	   				resizable: false,
+	   				height:140,
+	   				modal:true,
+	   				buttons: {
+	   					"${delete_bttn_label}": function() {
+	   						$(this).dialog("close");
+	   						doDelete(item);
+	   					},
+	   					Cancel: function() {
+	   						$(this).dialog("close");
+	   					}
+	   				}
+	   			});
+	   		};
+	   		
+	   		var doDelete = function(item) {
+	        	var $row = $(item).parents('.row-item');
+	            $.ajax({
+	                dataType: 'json',
+	                error: function(jqXHR,textStatus,errorThrown) {
+	                	alert("Error " + textStatus + ". ${ajax_error_msg}")
+	                },
+	                success:function(data, textStatus, jqXHR) {
+	                	if(data.success) {
+	                		removeRow(dataTable, $row);
+	                	}
+	                },
+	                type: 'DELETE',
+	                url: $(item).attr('for')
+	            });
+	   		}
+	   		// perhaps we can move this to the manager.js
+	   		$(document).ajaxStart(function() {
+				pleaseWait();
+	   		});
+	   		
+	   		// sometimes ajax.complete doesn't get triggered
+	   		$(document).ajaxError(function() {
+	   			removePleaseWait();
+	   		});
+	   		
+	   		$(document).ajaxSuccess(function() {
+	   			removePleaseWait();
+	   		});
+	   		
+	   		// select filtering query params
+	   		var params = getParams();
+	   		var show = params["show"];
+	   		var hide = params["hide"];
+			if (show != null) {
+				for (index in show) {
+					var selectedOption = "show_" + show[index];
+					$('select.filter option[value="'+selectedOption+'"]').attr("selected", "selected");
+				}
+			}
+			
+			if (hide != null) {
+				for (index in hide) {
+					var selectedOption = "hide_" + hide[index];
+					$('select.filter option[value="'+selectedOption+'"]').attr("selected", "selected");
+				}
+			}
+	   		
+	    });
+   
+	    var filter = function(select) {
+    		var selected = $(select).find("option:selected").val();
+    		var selectedArr = selected.split("_");
+    		var params = {};
+    		params[selectedArr[0]]=selectedArr[1];
+    		var url = '${filteringUrl}?' + $.param(params, true);
+    		window.location.replace(url);
+    	};
+    </script>
+</jsp:root>

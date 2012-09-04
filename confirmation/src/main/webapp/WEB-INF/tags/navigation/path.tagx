@@ -1,0 +1,122 @@
+<jsp:root xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:util="urn:jsptagdir:/WEB-INF/tags/util"
+	xmlns:form="http://www.springframework.org/tags/form"
+	xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns:spring="http://www.springframework.org/tags"
+	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt" version="2.0">
+	<jsp:output omit-xml-declaration="yes" />
+
+	<spring:url value="/" var="root" />
+	<c:set var="homePath" value="${root}" />
+	<c:set var="clusterPath" value="${root}cluster" />
+	<c:set var="settingsPath" value="${root}settings" />
+	<c:set var="logoutPath"
+		value="${root}security-resources/j_spring_security_logout" />
+	<c:set var="reportingPath">
+		<spring:eval
+			expression="T(java.lang.System).getProperty('reporting.url')" />
+	</c:set>
+	<c:set var="imagesRoot" value="${root}resources/images" />
+
+	<!-- Admin -->
+	<c:set var="userPath" value="${root}users" />
+	<c:set var="organizationsPath" value="${root}organizations" />
+	<c:set var="organizationPath"
+		value="${organizationsPath}/${organization.id}" />
+	<c:set var="sitesPath"
+		value="${organizationsPath}/${organization.id}/sites" />
+	<c:set var="sitePath" value="${sitesPath}/${site.id}" />
+
+	<c:set var="settingsPath" value="${root}settings" />
+	<c:set var="resourceNotFoundPath" value="${root}resourceNotFound" />
+	<c:set var="subscribersPath" value="resourceNotFoundPath" />
+
+	<!-- Offers -->
+	<c:set var="orgSubPath" value="${root}org/${orgId}" />
+	<c:set var="offerGroupsPath" value="${orgSubPath}/offergroups" />
+	<c:set var="offerGroupPath" value="${offerGroupsPath}/${offergroup.id}" />
+	<c:set var="offerPath" value="${offerGroupPath}/offers" />
+
+	<!-- Site Builder -->
+	<c:set var="siteBuilderPath" value="${orgSubPath}/sites" />
+
+	<!-- Messaging -->
+	<c:set var="campaignsPath" value="${orgSubPath}/campaigns" />
+	<c:set var="campignTypePath"
+		value="${campaignsPath}/${fn:toLowerCase(campaign.campaignType)}" />
+	<c:set var="campaignPath" value="${campignTypePath}/${campaign.id}" />
+	<c:set var="campaignTagsPath" value="${campaignPath}/tags" />
+
+	<c:set var="sweepstakesPath" value="${campaignsPath}/sweepstakes" />
+	<c:set var="alertPath" value="${campaignsPath}/alert" />
+	<c:set var="eventsPath" value="${alertPath}/${campaign.id}/events" />
+	<c:set var="eventPath" value="${eventsPath}/${event.id}" />
+	<c:set var="textinPath" value="${campaignsPath}/textin" />
+	<c:set var="pollPath" value="${campaignsPath}/poll" />
+	<c:set var="triviaPath" value="${campaignsPath}/trivia" />
+	<c:set var="responsesPath"
+		value="${textinPath}/${campaign.id}/responses" />
+	<c:set var="messagesPath" value="${textinPath}/${campaign.id}/messages" />
+	<c:set var="responsePath" value="${responsesPath}/${response.id}" />
+	<c:set var="textResponderPath" value="${campaignsPath}/text_responder" />
+
+	<c:set var="campaignRegistrationsPath"
+		value="${campaignsPath}/${campaign.id}/registrations" />
+	<c:set var="campaignRegistrationPath"
+		value="${campaignRegistrationsPath}/${subscriber.id}" />
+	<c:set var="registrationsPath" value="${campaignsPath}/registrations" />
+	<c:set var="subscriberReportingPath" value="${resourceNotFoundPath}" />
+
+	<c:set var="shortCodesPath" value="${root}shortcodes" />
+	<c:set var="orgShortCodesPath" value="${orgSubPath}/shortcodes" />
+
+	<jsp:directive.attribute name="name" type="java.lang.String"
+		required="true" rtexprvalue="true" description="path code to look up" />
+	<jsp:directive.attribute name="var" type="java.lang.String"
+		required="false" description="variable to Specify the URL path" />
+	<c:if test="${empty var}">
+		<c:set var="var" value="${name}" />
+	</c:if>
+
+	<c:choose>
+		<c:when test="${name eq 'messageReportingPath'}">
+			<spring:eval
+				expression="T(java.lang.System).getProperty('message.reporting.url.subpath')"
+				var="subpath" />
+			<spring:eval
+				expression="T(java.lang.System).getProperty('message.reporting.url.startupUrl1')"
+				var="startupUrl1" />
+			<spring:eval
+				expression="T(java.lang.System).getProperty('message.reporting.url.startupUrl2')"
+				var="startupUrl2" />
+
+			<fmt:formatDate pattern="${iso_datetime_format}"
+				value="${campaign.startDate}" var="formattedStartDate" />
+			<fmt:formatDate pattern="${iso_datetime_format}"
+				value="${campaign.endDate}" var="formattedEndDate" />
+
+			<spring:url value="${startupUrl1}${startupUrl2}" var="startupUrl"
+				htmlEscape="false">
+                <c:set var="capitalizeCampaignTypeExpr" value="campaign.getCamelCaseCampaignTypeName()"/>
+                <spring:eval var="capitalizedCampaignType" expression="${capitalizeCampaignTypeExpr}"/>
+				<spring:param name="campaignType" value="${capitalizedCampaignType}" />
+				<spring:param name="campaignName" value="${campaign.name}" />
+				<spring:param name="accountName" value="${orgName}" />
+				<spring:param name="dateFrom" value="${formattedStartDate}" />
+				<spring:param name="dateTo" value="${formattedEndDate}" />
+			</spring:url>
+
+			<spring:eval
+				expression="T(java.net.URLEncoder).encode(startupUrl, 'UTF-8')"
+				var="encodedStartupUrl" />
+			<spring:url value="${reportingPath}${subpath}${encodedStartupUrl}"
+				var="messageReportingPath" scope="request" />
+		</c:when>
+		<c:otherwise>
+			<spring:eval expression="${name}" var="url" />
+			<spring:url value="${url}" var="${name}" scope="request" />
+		</c:otherwise>
+	</c:choose>
+
+</jsp:root>
